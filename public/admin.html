@@ -1,0 +1,313 @@
+[System.IO.File]::WriteAllText(
+  "$PWD\public\admin.html",
+  @'
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Priority Briefs — CivicLens AI (Official View)</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #12335e; --blue-dark: #0a1f3d; --yellow: #ffd300; --black: #0b0c0c;
+    --bg: #f3f2f1; --panel: #ffffff; --line: #b1b4b6; --muted: #505a5f;
+    --green: #00703c; --amber: #b5730a; --red: #d4351c;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--black); font-family: 'IBM Plex Sans', Arial, sans-serif; line-height: 1.5; }
+  *:focus { outline: 3px solid var(--yellow); outline-offset: 0; }
+  .tricolor { height: 4px; background: linear-gradient(90deg, #FF9933 0%, #FF9933 33%, #FFFFFF 33%, #FFFFFF 67%, #138808 67%); }
+
+  header.top { background: var(--blue); color: #fff; padding: 14px 0; border-bottom: 6px solid var(--yellow); }
+  .top-inner { max-width: 1000px; margin: 0 auto; padding: 0 24px; display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+  .brand .mark { width: 32px; height: 32px; border-radius: 50%; background: #fff; display: flex; align-items: center; justify-content: center; font-size: 13px; color: var(--blue); font-weight: 700; border: 2px solid var(--yellow); }
+  .brand .name { color: #fff; font-weight: 700; font-size: 17px; }
+  .brand .role { color: #cfd8e2; font-size: 11.5px; text-transform: uppercase; letter-spacing: .04em; margin-left: 6px; padding-left: 10px; border-left: 1px solid rgba(255,255,255,.3); }
+
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 32px 24px 80px; }
+
+  .banner {
+    background: #fff8e1; border: 2px solid var(--yellow); padding: 14px 18px; font-size: 13.5px; color: #5c4a00;
+    margin-bottom: 28px; display: flex; gap: 10px; align-items: flex-start;
+  }
+  .banner b { color: #3a2e00; }
+
+  h1 { font-size: 26px; font-weight: 700; margin: 0 0 6px; }
+  .subhead { color: var(--muted); font-size: 14px; margin: 0 0 28px; max-width: 70ch; }
+
+  .filters { display: flex; gap: 8px; margin-bottom: 22px; flex-wrap: wrap; }
+  .filter { border: 2px solid var(--black); background: #fff; padding: 7px 14px; font-size: 12.5px; font-weight: 600; cursor: pointer; }
+  .filter.active { background: var(--black); color: #fff; }
+
+  .briefs { display: flex; flex-direction: column; gap: 18px; }
+
+  .brief { background: var(--panel); border: 1px solid var(--line); border-left: 6px solid var(--muted); }
+  .brief.high { border-left-color: var(--red); }
+  .brief.medium { border-left-color: var(--amber); }
+  .brief.low { border-left-color: var(--green); }
+
+  .brief-head { display: flex; justify-content: space-between; align-items: flex-start; padding: 18px 22px 0; gap: 20px; }
+  .brief-title { font-size: 17px; font-weight: 700; margin: 0 0 6px; }
+  .brief-meta { font-size: 12.5px; color: var(--muted); display: flex; gap: 14px; flex-wrap: wrap; }
+  .brief-meta span { display: inline-flex; align-items: center; gap: 4px; }
+
+  .score-box { text-align: center; flex-shrink: 0; }
+  .score-num { font-family: 'IBM Plex Mono', monospace; font-size: 30px; font-weight: 700; line-height: 1; }
+  .score-num.high { color: var(--red); }
+  .score-num.medium { color: var(--amber); }
+  .score-num.low { color: var(--green); }
+  .score-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; margin-top: 2px; }
+
+  .brief-body { padding: 16px 22px 20px; }
+  .brief-summary { font-size: 14px; color: var(--black); margin: 0 0 16px; }
+
+  .evidence { background: var(--bg); border: 1px solid var(--line); padding: 14px 16px; margin-bottom: 14px; }
+  .evidence-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin-bottom: 10px; }
+  .evidence-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .ev-item .ev-num { font-family: 'IBM Plex Mono', monospace; font-size: 15px; font-weight: 700; color: var(--blue); }
+  .ev-item .ev-lbl { font-size: 11.5px; color: var(--muted); }
+
+  .brief-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 4px; flex-wrap: wrap; gap: 10px; }
+  .dup-count { font-size: 12.5px; color: var(--muted); background: var(--bg); border: 1px solid var(--line); padding: 5px 12px; }
+  .dup-count b { color: var(--black); }
+  .next-step { font-size: 13px; font-weight: 600; color: var(--blue); }
+
+  .dup-toggle {
+    display: block; width: 100%; text-align: left; background: none; border: none; border-top: 1px solid var(--line);
+    margin-top: 16px; padding: 12px 0 0; font-size: 12.5px; font-weight: 700; color: var(--blue); cursor: pointer;
+  }
+  .dup-list { margin-top: 12px; border-top: 1px dashed var(--line); padding-top: 12px; }
+  .dup-item { padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .dup-item:last-child { border-bottom: none; }
+  .dup-text { font-size: 13px; color: var(--black); margin-bottom: 3px; }
+  .dup-meta { font-size: 11.5px; color: var(--muted); }
+  .dup-more { font-size: 12px; color: var(--muted); font-style: italic; padding-top: 8px; }
+  .hidden { display: none !important; }
+
+  footer.note { margin-top: 36px; padding-top: 20px; border-top: 1px solid var(--line); font-size: 12px; color: var(--muted); }
+
+  @media (max-width: 640px) {
+    .brief-head { flex-direction: column; }
+    .score-box { align-self: flex-start; }
+  }
+</style>
+</head>
+<body>
+<div class="tricolor"></div>
+<header class="top">
+  <div class="top-inner">
+    <a class="brand" href="index.html"><div class="mark">CL</div><div class="name">CivicLens AI</div><span class="role">Official / Reviewer View</span></a>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="banner">
+    ⚠️ <div><b>Sample data for demonstration.</b> The four briefs below are illustrative — showing the format and reasoning a real priority report will contain once live complaint clustering and data fusion (Phase 3) are connected. Scores, evidence figures, and duplicate counts here are not from real citizen submissions.</div>
+  </div>
+
+  <h1>Priority Briefs</h1>
+  <p class="subhead">Complaint clusters ranked by priority score, each with the underlying evidence — population affected, distance to the nearest existing facility, and overlap with already-planned projects — so no score is a black box.</p>
+
+  <div class="filters">
+    <div class="filter active" data-f="all">All districts</div>
+    <div class="filter" data-f="water">Water</div>
+    <div class="filter" data-f="roads">Roads</div>
+    <div class="filter" data-f="electricity">Electricity</div>
+    <div class="filter" data-f="healthcare">Healthcare</div>
+  </div>
+
+  <div class="briefs" id="briefs">
+
+    <div class="brief high" data-cat="water">
+      <div class="brief-head">
+        <div>
+          <div class="brief-title">No piped water supply — Lane 4 to Lane 9, Kukatpally</div>
+          <div class="brief-meta">
+            <span>📍 Hyderabad · Kukatpally</span>
+            <span>💧 Water</span>
+            <span>🕒 Open 23 days</span>
+          </div>
+        </div>
+        <div class="score-box">
+          <div class="score-num high">87</div>
+          <div class="score-lbl">/ 100</div>
+        </div>
+      </div>
+      <div class="brief-body">
+        <p class="brief-summary">Residents across a 6-lane stretch report no piped water supply for over three weeks, relying on private tankers. Households include elderly residents and young children with reported health effects.</p>
+        <div class="evidence">
+          <div class="evidence-title">Evidence used in this score</div>
+          <div class="evidence-grid">
+            <div class="ev-item"><div class="ev-num">~4,200</div><div class="ev-lbl">Residents in affected radius</div></div>
+            <div class="ev-item"><div class="ev-num">2.8 km</div><div class="ev-lbl">To nearest functioning supply point</div></div>
+            <div class="ev-item"><div class="ev-num">None found</div><div class="ev-lbl">Overlapping planned project</div></div>
+            <div class="ev-item"><div class="ev-num">High</div><div class="ev-lbl">Health-risk flag (elderly/children)</div></div>
+          </div>
+        </div>
+        <div class="brief-footer">
+          <div class="dup-count"><b>14</b> separate reports grouped into this cluster</div>
+          <div class="next-step">Suggested next step: dispatch tanker + inspect main line →</div>
+        </div>
+        <button class="dup-toggle" data-target="dupList1">▾ Show the 14 grouped reports</button>
+        <div class="dup-list hidden" id="dupList1">
+          <div class="dup-item">
+            <div class="dup-text">"No water since Wednesday, we've been buying cans every day."</div>
+            <div class="dup-meta">Lane 6, Kukatpally · reported 3 days ago</div>
+          </div>
+          <div class="dup-item">
+            <div class="dup-text">"Tanker only comes once every 2 days, not enough for the whole street."</div>
+            <div class="dup-meta">Lane 4, Kukatpally · reported 5 days ago</div>
+          </div>
+          <div class="dup-item">
+            <div class="dup-text">"My grandmother can't carry water from the tanker, we need a real fix."</div>
+            <div class="dup-meta">Lane 7, Kukatpally · reported 8 days ago</div>
+          </div>
+          <div class="dup-item">
+            <div class="dup-text">"Same issue as everyone else here — pipeline seems to be the problem, not the source."</div>
+            <div class="dup-meta">Lane 5, Kukatpally · reported 12 days ago</div>
+          </div>
+          <div class="dup-item">
+            <div class="dup-text">"Three weeks now. Kids' school timing clashes with tanker arrival."</div>
+            <div class="dup-meta">Lane 9, Kukatpally · reported 19 days ago</div>
+          </div>
+          <div class="dup-more">+ 9 more reports from this same cluster</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief high" data-cat="roads">
+      <div class="brief-head">
+        <div>
+          <div class="brief-title">Unrepaired potholes near Government High School, Warangal</div>
+          <div class="brief-meta">
+            <span>📍 Hanumakonda · Warangal Urban</span>
+            <span>🛣️ Roads</span>
+            <span>🕒 Open 41 days</span>
+          </div>
+        </div>
+        <div class="score-box">
+          <div class="score-num high">81</div>
+          <div class="score-lbl">/ 100</div>
+        </div>
+      </div>
+      <div class="brief-body">
+        <p class="brief-summary">Deep potholes on the school approach road have caused two reported two-wheeler accidents in the past month. Road is on the direct route used by ~600 students daily.</p>
+        <div class="evidence">
+          <div class="evidence-title">Evidence used in this score</div>
+          <div class="evidence-grid">
+            <div class="ev-item"><div class="ev-num">~600</div><div class="ev-lbl">Students using this route daily</div></div>
+            <div class="ev-item"><div class="ev-num">2</div><div class="ev-lbl">Reported accidents (30 days)</div></div>
+            <div class="ev-item"><div class="ev-num">0.4 km</div><div class="ev-lbl">From nearest school gate</div></div>
+            <div class="ev-item"><div class="ev-num">None found</div><div class="ev-lbl">Overlapping planned project</div></div>
+          </div>
+        </div>
+        <div class="brief-footer">
+          <div class="dup-count"><b>7</b> separate reports grouped into this cluster</div>
+          <div class="next-step">Suggested next step: urgent patch repair + signage →</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief medium" data-cat="electricity">
+      <div class="brief-head">
+        <div>
+          <div class="brief-title">Frequent transformer trips, Ashok Nagar area</div>
+          <div class="brief-meta">
+            <span>📍 Karimnagar · Ashok Nagar</span>
+            <span>⚡ Electricity</span>
+            <span>🕒 Open 12 days</span>
+          </div>
+        </div>
+        <div class="score-box">
+          <div class="score-num medium">58</div>
+          <div class="score-lbl">/ 100</div>
+        </div>
+      </div>
+      <div class="brief-body">
+        <p class="brief-summary">Residents report power cuts of 2-4 hours, several times a week, concentrated around a single local transformer. No health or safety escalation reported.</p>
+        <div class="evidence">
+          <div class="evidence-title">Evidence used in this score</div>
+          <div class="evidence-grid">
+            <div class="ev-item"><div class="ev-num">~900</div><div class="ev-lbl">Households in affected zone</div></div>
+            <div class="ev-item"><div class="ev-num">5x/week</div><div class="ev-lbl">Reported outage frequency</div></div>
+            <div class="ev-item"><div class="ev-num">Scheduled Q3</div><div class="ev-lbl">Overlapping planned project</div></div>
+            <div class="ev-item"><div class="ev-num">Low</div><div class="ev-lbl">Health-risk flag</div></div>
+          </div>
+        </div>
+        <div class="brief-footer">
+          <div class="dup-count"><b>9</b> separate reports grouped into this cluster</div>
+          <div class="next-step">Suggested next step: confirm Q3 upgrade timeline →</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="brief low" data-cat="healthcare">
+      <div class="brief-head">
+        <div>
+          <div class="brief-title">Long wait times at Primary Health Centre, Siddipet</div>
+          <div class="brief-meta">
+            <span>📍 Siddipet · Town PHC</span>
+            <span>🏥 Healthcare</span>
+            <span>🕒 Open 6 days</span>
+          </div>
+        </div>
+        <div class="score-box">
+          <div class="score-num low">34</div>
+          <div class="score-lbl">/ 100</div>
+        </div>
+      </div>
+      <div class="brief-body">
+        <p class="brief-summary">A small number of reports cite long queues at the town PHC on weekday mornings. Facility is within normal service distance and no capacity data suggests a structural gap yet.</p>
+        <div class="evidence">
+          <div class="evidence-title">Evidence used in this score</div>
+          <div class="evidence-grid">
+            <div class="ev-item"><div class="ev-num">1.1 km</div><div class="ev-lbl">Average distance to facility</div></div>
+            <div class="ev-item"><div class="ev-num">3</div><div class="ev-lbl">Reports, single week</div></div>
+            <div class="ev-item"><div class="ev-num">Within norm</div><div class="ev-lbl">Population-to-facility ratio</div></div>
+            <div class="ev-item"><div class="ev-num">None found</div><div class="ev-lbl">Overlapping planned project</div></div>
+          </div>
+        </div>
+        <div class="brief-footer">
+          <div class="dup-count"><b>3</b> separate reports grouped into this cluster</div>
+          <div class="next-step">Suggested next step: monitor — below action threshold →</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="note">
+    Priority score (0–100) combines: population affected, distance to nearest existing service, overlap with already-planned or completed projects, and duplicate-report volume. Full scoring methodology and live data sources will be documented before deployment beyond this pilot.
+  </footer>
+</div>
+
+<script>
+  const filters = document.querySelectorAll(".filter");
+  const briefs = document.querySelectorAll(".brief");
+  filters.forEach((f) => {
+    f.addEventListener("click", () => {
+      filters.forEach((x) => x.classList.remove("active"));
+      f.classList.add("active");
+      const val = f.dataset.f;
+      briefs.forEach((b) => {
+        b.style.display = (val === "all" || b.dataset.cat === val) ? "" : "none";
+      });
+    });
+  });
+
+  document.querySelectorAll(".dup-toggle").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const target = document.getElementById(btn.dataset.target);
+      const nowHidden = target.classList.toggle("hidden");
+      btn.textContent = btn.textContent.replace(nowHidden ? "▴" : "▾", nowHidden ? "▾" : "▴")
+        .replace(nowHidden ? "Hide" : "Show", nowHidden ? "Show" : "Hide");
+    });
+  });
+</script>
+</body>
+</html>
+'@,
+  [System.Text.UTF8Encoding]::new($false)
+)

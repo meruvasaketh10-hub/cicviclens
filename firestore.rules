@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    match /complaints/{complaintId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if false;
+    }
+
+    match /clusters/{clusterId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /priority_reports/{reportId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /interventions/{interventionId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

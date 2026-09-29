@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CivicLens AI — Report an Issue</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 500px; margin: 40px auto; padding: 0 16px; }
+    h1 { font-size: 22px; }
+    label { display: block; margin-top: 16px; font-weight: bold; }
+    textarea, input { width: 100%; padding: 8px; margin-top: 4px; box-sizing: border-box; font-size: 14px; }
+    button { margin-top: 20px; padding: 10px 20px; font-size: 15px; cursor: pointer; }
+    #status { margin-top: 16px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h1>CivicLens AI — Report an Infrastructure Issue</h1>
+  <p>Describe a problem with roads, water, electricity, sanitation, healthcare, education, or public transport in your area.</p>
+
+  <form id="complaintForm">
+    <label for="text">What's the problem?</label>
+    <textarea id="text" rows="4" required placeholder="e.g. No water supply in Lane 4 for 3 weeks..."></textarea>
+
+    <label for="area">Area / Ward (optional)</label>
+    <input id="area" type="text" placeholder="e.g. Ward 12" />
+
+    <button type="submit">Submit Complaint</button>
+  </form>
+
+  <div id="status"></div>
+
+  <!-- Firebase SDK (loaded from Google's servers) -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp }
+      from "https://www.gstatic.com/firebasejs/10.13.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+  apiKey: "AIzaSyA5DiX2SLhKNWCz4iYRt2sMwU4bBy1jd8U",
+  authDomain: "civiclens-ai-f82bb.firebaseapp.com",
+  projectId: "civiclens-ai-f82bb",
+  storageBucket: "civiclens-ai-f82bb.firebasestorage.app",
+  messagingSenderId: "647394578869",
+  appId: "1:647394578869:web:2bc1b9d86dcd94e00809fc",
+};
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    document.getElementById("complaintForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const status = document.getElementById("status");
+      const text = document.getElementById("text").value.trim();
+      const area = document.getElementById("area").value.trim();
+
+      if (!text) return;
+
+      status.textContent = "Submitting...";
+      try {
+        await addDoc(collection(db, "complaints"), {
+          text,
+          area: area || null,
+          status: "new",
+          createdAt: serverTimestamp(),
+        });
+        status.textContent = "✅ Thank you — your complaint has been submitted.";
+        document.getElementById("complaintForm").reset();
+      } catch (err) {
+        status.textContent = "❌ Something went wrong. Please try again.";
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>

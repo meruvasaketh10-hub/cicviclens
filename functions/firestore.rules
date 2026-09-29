@@ -1,0 +1,30 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Anyone can submit a new complaint, and anyone can read complaints/clusters/reports
+    // (this is a public transparency tool). Nobody can edit or delete once created,
+    // except our own backend functions (which run with admin access and skip these rules).
+
+    match /complaints/{complaintId} {
+      allow read: if true;
+      allow create: if true;
+      allow update, delete: if false;
+    }
+
+    match /clusters/{clusterId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /priority_reports/{reportId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /interventions/{interventionId} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}
