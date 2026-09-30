@@ -24,7 +24,7 @@ CivicLens AI lets citizens submit a complaint about any civic issue (water, road
 Add your link here
 
 ## Demo Video
-Add your link here
+https://civiclens-ai-f82bb.web.app
 
 ## Setup
 1. Clone this repository
