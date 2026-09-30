@@ -21,10 +21,10 @@ CivicLens AI lets citizens submit a complaint about any civic issue (water, road
 - **Firebase Hosting:** hosts the web app
 
 ## Live Demo
-Add your link here
+https://civiclens-ai-f82bb.web.app
 
 ## Demo Video
-https://civiclens-ai-f82bb.web.app
+https://youtu.be/7qsffJgNit4?si=wV_lEWbgqBkftl1i
 
 ## Setup
 1. Clone this repository
