@@ -1,33 +1,36 @@
 # CivicLens AI
 
-One-line description: what it does and for whom.
+An AI-powered app that helps citizens report civic problems in their city or town, and sends them to the local municipal office to be resolved.
 
 ## Problem
-Describe the civic issue you're solving (2-4 sentences).
+People often face issues like water supply problems and damaged roads, but there is no simple way to report them to the right authority. Complaints get lost, delayed, or reach the wrong department.
 
 ## Solution
-How CivicLens solves it. Explain what the user does and what the AI does.
+CivicLens AI lets citizens submit a complaint about any civic issue (water, roads, and more). The AI classifies the complaint, and it is forwarded to the local municipal office, which can view it and take action.
+
+## How It Works
+1. A citizen submits a complaint in the web app.
+2. AI classifies the complaint by type (for example water, roads).
+3. The complaint is saved in the database.
+4. The municipal office views the complaint and acts on it.
 
 ## Google Technologies Used
-- **Google AI Studio / Gemini API**: used in classify.mjs to classify citizen reports
-- **Firebase Firestore**: stores reports and results
-- **Firebase Cloud Functions**: runs the backend logic
-- **Firebase Hosting**: hosts the web app
-
-## Architecture
-User → Web app (Firebase Hosting) → Cloud Function → Gemini API → Firestore → Dashboard
+- **Gemini API (Google AI Studio):** classifies complaints (classify.mjs)
+- **Firebase Cloud Functions:** backend logic
+- **Cloud Firestore:** stores complaints
+- **Firebase Hosting:** hosts the web app
 
 ## Live Demo
-https://your-project.web.app
+Add your link here
 
 ## Demo Video
-https://youtube.com/...
+Add your link here
 
 ## Setup
-1. Clone the repo
-2. Run `npm install` inside `functions/`
-3. Add your own key: `GEMINI_API_KEY=your_key_here`
+1. Clone this repository
+2. Run `npm install` inside the `functions` folder
+3. Add your own Gemini API key as an environment variable (never commit it)
 4. Run `firebase deploy`
 
 ## Team
-Names and roles
+Add your name and team members here
